@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <router-view />
+    <router-view class ="content"/>
     <Footer />
   </div>
 </template>
@@ -21,4 +21,7 @@ export default {
 </script>
 
 <style scoped>
+.content {
+  padding: 0 200px;
+}
 </style>

@@ -21,11 +21,11 @@ export default{
     }
   },
   mounted() {
-    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener('scroll', this.handleScroll)
   },
   methods: {
     handleScroll() {
-      this.isScrolled = window.scrollY > 0;
+      this.isScrolled = window.scrollY > 0
     }
   }
 }
@@ -44,7 +44,7 @@ export default{
   z-index: 1000;
   backdrop-filter: none;
   background-color: transparent;
-  transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Плавный переход */
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
 }
 .header-box.header--scrolled {
   background-color: rgba(21, 26, 32, 0.5);
@@ -62,11 +62,6 @@ export default{
   position: relative;
   text-decoration: none;
   font-size: 18px;
-  background: linear-gradient(45deg, rgb(202, 214, 232), rgb(255, 255, 255));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  transition: color 0.3s ease;
 }
 .header-box__item:hover::after {
   width: 100%;
@@ -83,10 +78,8 @@ export default{
 }
 .header-box a {
   text-decoration: none;
-  background: linear-gradient(45deg, rgb(202, 214, 232), rgb(255, 255, 255));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: ghostwhite;
+  font-weight: 300;
 }
 .header-box__logo{
   padding-right: 150px;
