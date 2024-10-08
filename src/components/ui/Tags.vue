@@ -20,7 +20,7 @@ export default {
 
 <style scoped>
 .tags__header {
-  font-size: 32px;
+  font-size: 40px;
   background: linear-gradient(445deg, rgb(255, 255, 255), rgb(84, 100, 120));
   -webkit-background-clip: text;
   background-clip: text;

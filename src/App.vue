@@ -22,6 +22,10 @@ export default {
 
 <style scoped>
 .content {
-  padding: 0 200px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 300px 0 300px;
 }
 </style>
