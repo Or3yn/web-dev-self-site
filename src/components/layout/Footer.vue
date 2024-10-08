@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <p>© 2024 София Богданова. Все права защищены.</p>
+    <p>© 2024 София Богданова. Вся информация не претендует на достоверность.</p>
     <div class="footer-icons">
       <a href="https://gl.pkzdrav.ru/bsd" target="_blank" rel="noopener noreferrer">
         <img :src="gitlabImage" alt="Gitlab" class="footer-icons__item">

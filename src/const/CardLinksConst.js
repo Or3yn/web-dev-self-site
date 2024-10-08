@@ -1,7 +1,7 @@
-import popcorn from '../assets/icons/popcorn.png';
-import camera from '../assets/icons/camera.png';
-import book from '../assets/icons/book.png';
-import music from '../assets/icons/music.png';
+import popcorn from '../assets/icons/popcorn.png'
+import camera from '../assets/icons/camera.png'
+import book from '../assets/icons/book.png'
+import music from '../assets/icons/music.png'
 
 export const linksIcons = [
     {

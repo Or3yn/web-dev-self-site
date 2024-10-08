@@ -57,22 +57,6 @@ export default {
   object-fit: cover;
   border-radius: 10px;
 }
-h2 {
-  font-size: 36px;
-  margin-bottom: 15px;
-  font-weight: 700;
-  background: linear-gradient(445deg, rgb(255, 255, 255), rgb(84, 100, 120));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-h3 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  font-weight: 700;
-  color: #4fa3e0;
-}
 .photo-description__content{
   margin: 80px;
 }

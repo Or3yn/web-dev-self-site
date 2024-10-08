@@ -54,13 +54,11 @@ export default {
   align-items: center;
   height: 60vh;
 }
-
 .card-links {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
 .card-link {
   display: flex;
   align-items: center;
@@ -69,7 +67,6 @@ export default {
   transition: background-color 0.3s, box-shadow 0.3s;
   border-radius: 50px;
 }
-
 .card-link__icon {
   width: 24px;
   height: 24px;
@@ -77,22 +74,16 @@ export default {
   filter: grayscale(100%);
   transition: filter 0.3s;
 }
-
 .card-link__text {
   font-size: 18px;
   color: rgba(255, 255, 255, 0.8);
 }
-
-
-
 .card-link:hover .card-link__icon {
   filter: none;
 }
-
 .hover-highlight {
-  box-shadow: 0 0 20px 10px rgba(0, 191, 255, 0.3);
+  box-shadow: 0 0 20px 10px rgba(41, 136, 255, 0.46);
 }
-
 .highlight {
   box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7);
   transition: box-shadow 0.3s;

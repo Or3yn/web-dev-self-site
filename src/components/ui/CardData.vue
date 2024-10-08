@@ -1,6 +1,9 @@
 <template>
   <div class="card-data" :style="{ display: centerContent ? 'flex' : 'block', textAlign: centerContent ? 'center' : 'left' }">
-    <p class="card-data__header">{{ header }}</p>
+    <div class="card-data__header">
+      <img v-if="headerIcon" :src="headerIcon" class="header-icon" alt="header icon" />
+      <p>{{ header }}</p>
+    </div>
     <div class="card-data__content">
       <span v-for="(sentence, index) in formattedContent" :key="index" class="sentence">
         <img v-if="showArrow" :src="arrow" class="arrow-icon" alt="arrow icon" />
@@ -37,10 +40,14 @@ export default {
       type: Boolean,
       default: false
     },
+    headerIcon: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     formattedContent() {
-      return this.content.split('.').map(sentence => sentence + '.').filter(sentence => sentence.trim() !== '.');
+      return this.content.split('.').map(sentence => sentence + '.').filter(sentence => sentence.trim() !== '.')
     }
   },
   data() {
@@ -65,6 +72,13 @@ export default {
 .card-data__header {
   font-weight: 700;
   font-size: 24px;
+  display: flex;
+  align-items: center;
+}
+.header-icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 15px;
 }
 .sentence {
   display: inline;

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { timeline } from '../const/AboutMeConst.js'
+import { timeline } from '../const/CardDataConst.js'
 import PhotoDescription from '../components/ui/PhotoDescription.vue'
 
 export default {

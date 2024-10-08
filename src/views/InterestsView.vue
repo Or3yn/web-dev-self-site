@@ -19,7 +19,7 @@
 <script>
 import CardData from '../components/ui/CardData.vue'
 import CardLinks from "../components/ui/CardLinks.vue"
-import { interests } from '../const/InterestsConst.js'
+import { interests } from '../const/CardDataConst.js'
 
 export default {
   name: 'InterestsView',
