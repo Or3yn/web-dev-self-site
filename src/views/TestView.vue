@@ -124,7 +124,6 @@ export default {
     },
     updateAnswer(step, value) {
       this.testResult[step] = value;  // Обновляем конкретное значение в массиве testResult
-      console.log('Обновленный testResult:', this.testResult);
     },
     nextStep() {
       if (this.canProceed) {
@@ -136,12 +135,18 @@ export default {
     },
     async submitTest() {
       this.testSubmitted = true;
-
-      console.log('Ответы пользователя:', this.testResult);
-
-      // Отправляем массив на сервер
+      const testData = {
+        fullName: this.testResult[0],
+        group: this.testResult[1],
+        gender: this.testResult[2],
+        age: parseInt(this.testResult[3]),
+        mail: this.testResult[4],
+        question1: this.testResult[5],
+        question2: this.testResult[6],
+        question3: this.testResult[7],
+      };
       try {
-        await sendTestData(this.testResult);  // Используем сервис для отправки email
+        await sendTestData(testData);  // Используем сервис для отправки email
         console.log('Данные отправлены успешно');
       } catch (error) {
         console.error('Ошибка при отправке данных:', error);
