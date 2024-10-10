@@ -6,8 +6,7 @@
       <router-link class="header-box__item" to="/interests">Мои интересы</router-link>
       <router-link class="header-box__item" to="/university">Учёба</router-link>
       <router-link class="header-box__item" to="/album">Фотоальбом</router-link>
-      <router-link class="header-box__item" to="/tests">Тесты</router-link>
-      <router-link class="header-box__item" to="/contacts">Контакты</router-link>
+      <router-link class="header-box__item" to="/tests">Тест</router-link>
     </nav>
   </div>
 </template>

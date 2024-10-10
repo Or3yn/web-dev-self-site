@@ -1,14 +1,9 @@
 <template>
-  <div class="input-wrapper">
-    <label class ="shit">{{ label }}</label>
-    <input
-      v-if="!textarea"
-      v-model="localValue"
-      :type="type"
-      :placeholder="placeholder"
-      @input="checkInput"
-    />
-    <textarea v-else v-model="localValue" :placeholder="placeholder" @input="checkInput"></textarea>
+  <div class="selector-wrapper">
+    <label>{{ label }}</label>
+    <select v-model="localValue" @change="checkInput">
+      <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
+    </select>
   </div>
 </template>
 
@@ -16,16 +11,8 @@
 export default {
   props: {
     label: String,
+    options: Array,
     value: String,  // Привязка v-model
-    type: {
-      type: String,
-      default: 'text',
-    },
-    textarea: {
-      type: Boolean,
-      default: false,
-    },
-    placeholder: String,
   },
   computed: {
     localValue: {
@@ -50,16 +37,17 @@ export default {
 </script>
 
 <style scoped>
-.input-wrapper {
+.selector-wrapper {
   margin: 10px 0 20px 0;
+  width: 100%;
 }
-input, textarea {
-  width: 100%; /* Ширина на 100% от родительского контейнера */
+
+select {
+  width: 100%;
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #ccc;
   background-color: #1b1f26;
   color: white;
-  box-sizing: border-box; /* Учитываем padding и границы */
 }
 </style>
