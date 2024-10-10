@@ -4,26 +4,31 @@
 
     <transition name="fade-out" @after-leave="showSubmittedMessage = true">
       <div v-if="!testSubmitted" class="test-view__form-container">
-        <div class="test-view__step-container" v-if="currentStep === 1">
-          <Input v-model="formData.fullName" label="Фамилия Имя Отчество" @inputFilled="handleInputFilled('fullName', $event)" />
-          <Selector v-model="formData.group" label="Группа" :options="groups" @inputFilled="handleInputFilled('group', $event)" />
-          <RadioGroup v-model="formData.gender" label="Пол" :options="genders" @inputFilled="handleInputFilled('gender', $event)" />
-          <Selector v-model="formData.age" label="Возраст" :options="ages" @inputFilled="handleInputFilled('age', $event)" />
-          <Input v-model="formData.mail" label="E-mail" type="email" @inputFilled="handleInputFilled('mail', $event)" />
+        <!-- Шаг 1 -->
+        <div class="test-view__step-container" v-show="currentStep === 1">
+          <Input v-model="formData.fullName" label="Фамилия Имя Отчество" @inputFilled="handleInputFilled('fullName', $event)" @updateAnswer="updateAnswer(0, $event)" />
+          <Selector v-model="formData.group" label="Группа" :options="groups" @inputFilled="handleInputFilled('group', $event)" @updateAnswer="updateAnswer(1, $event)" />
+          <RadioGroup v-model="formData.gender" label="Пол" :options="genders" @inputFilled="handleInputFilled('gender', $event)" @updateAnswer="updateAnswer(2, $event)" />
+          <Selector v-model="formData.age" label="Возраст" :options="ages" @inputFilled="handleInputFilled('age', $event)" @updateAnswer="updateAnswer(3, $event)" />
+          <Input v-model="formData.mail" label="E-mail" type="email" @inputFilled="handleInputFilled('mail', $event)" @updateAnswer="updateAnswer(4, $event)" />
         </div>
 
-        <div class="test-view__step-container" v-if="currentStep === 2">
-          <Selector v-model="formData.question1" label="Что такое алгоритм?" :options="questions1" @inputFilled="handleInputFilled('question1', $event)" />
+        <!-- Шаг 2 -->
+        <div class="test-view__step-container" v-show="currentStep === 2">
+          <Selector v-model="formData.question1" label="Что такое алгоритм?" :options="questions1" @inputFilled="handleInputFilled('question1', $event)" @updateAnswer="updateAnswer(5, $event)" />
         </div>
 
-        <div class="test-view__step-container" v-if="currentStep === 3">
-          <Input v-model="formData.question2" label="Опишите принципы ООП" textarea @inputFilled="handleInputFilled('question2', $event)" />
+        <!-- Шаг 3 -->
+        <div class="test-view__step-container" v-show="currentStep === 3">
+          <Input v-model="formData.question2" label="Опишите принципы ООП" textarea @inputFilled="handleInputFilled('question2', $event)" @updateAnswer="updateAnswer(6, $event)" />
         </div>
 
-        <div class="test-view__step-container" v-if="currentStep === 4">
-          <RadioGroup v-model="formData.question3" label="Какой оператор используется для цикла?" :options="questions3" @inputFilled="handleInputFilled('question3', $event)" />
+        <!-- Шаг 4 -->
+        <div class="test-view__step-container" v-show="currentStep === 4">
+          <RadioGroup v-model="formData.question3" label="Какой оператор используется для цикла?" :options="questions3" @inputFilled="handleInputFilled('question3', $event)" @updateAnswer="updateAnswer(7, $event)" />
         </div>
 
+        <!-- Навигационные кнопки -->
         <div class="test-view__navigation">
           <button v-if="currentStep > 1" @click="prevStep" class="test-view__button test-view__button--back">Назад</button>
           <button
@@ -49,6 +54,7 @@
     </transition>
   </div>
 </template>
+
 
 <script>
 import Input from '../components/ui/Input.vue';
@@ -77,6 +83,7 @@ export default {
         question2: '',  // Ответ на вопрос 2
         question3: '',  // Ответ на вопрос 3
       },
+      testResult: [],  // Массив для хранения ответов
       inputsFilled: {
         fullName: false,
         group: false,
@@ -115,6 +122,10 @@ export default {
     handleInputFilled(field, isFilled) {
       this.inputsFilled[field] = isFilled;
     },
+    updateAnswer(step, value) {
+      this.testResult[step] = value;  // Обновляем конкретное значение в массиве testResult
+      console.log('Обновленный testResult:', this.testResult);
+    },
     nextStep() {
       if (this.canProceed) {
         this.currentStep++;
@@ -125,22 +136,21 @@ export default {
     },
     async submitTest() {
       this.testSubmitted = true;
-      const testResult = { ...this.formData };
 
-      // Выводим данные в консоль перед отправкой
-      console.log('Отправляемые данные:', testResult);
+      console.log('Ответы пользователя:', this.testResult);
 
-      // Отправляем данные через API
+      // Отправляем массив на сервер
       try {
-        await sendTestData(testResult);  // Используем сервис для отправки email
-        console.log('Email отправлен успешно');
+        await sendTestData(this.testResult);  // Используем сервис для отправки email
+        console.log('Данные отправлены успешно');
       } catch (error) {
-        console.error('Ошибка при отправке email:', error);
+        console.error('Ошибка при отправке данных:', error);
       }
     }
   }
 }
 </script>
+
 
 <style scoped>
 label{

@@ -43,6 +43,7 @@ export default {
         this.selectedValue = option; // Устанавливаем новое значение
         this.$emit('input', option);
         this.$emit('inputFilled', true); // Сообщаем, что выбор сделан
+        this.$emit('updateAnswer', option);  // Передаём данные в родителя
       }
     },
   },
@@ -53,13 +54,16 @@ export default {
 .radio-group-wrapper {
   margin: 10px 0 20px 0;
 }
+
 .radio-options {
   display: flex;
   flex-direction: column;
 }
+
 .radio-option {
   margin-bottom: 10px;
 }
+
 input[type="radio"] {
   margin-right: 10px;
 }
