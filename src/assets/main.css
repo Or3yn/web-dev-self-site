@@ -1,5 +1,35 @@
-body {
-    background-color: #12161d;
-    font-family: Arial, sans-serif;
-    color: #b1b5bd;
+html, body {
+    min-height: 100vh;
+    background: rgb(19, 23, 28);
+    color: #dedeea;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.6;
+}
+h1 {
+    font-weight:700;
+    font-size: 64px;
+    background: linear-gradient(445deg, rgb(255, 255, 255), rgb(84, 100, 120));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-top: 10%;
+    margin-bottom: 5%;
+    text-align: center;
+}
+h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    background: linear-gradient(445deg, rgb(255, 255, 255), rgb(84, 100, 120));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: #4fa3e0;
 }
