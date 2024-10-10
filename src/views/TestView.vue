@@ -2,22 +2,28 @@
   <div class="test-view">
     <h1 class="test-view__title">Основы программирования и алгоритмические языки</h1>
 
-    <!-- Плавное исчезновение формы после отправки -->
     <transition name="fade-out" @after-leave="showSubmittedMessage = true">
       <div v-if="!testSubmitted" class="test-view__form-container">
         <div class="test-view__step-container" v-if="currentStep === 1">
           <Input v-model="formData.fullName" label="Фамилия Имя Отчество" @inputFilled="handleInputFilled('fullName', $event)" />
           <Selector v-model="formData.group" label="Группа" :options="groups" @inputFilled="handleInputFilled('group', $event)" />
+          <RadioGroup v-model="formData.gender" label="Пол" :options="genders" @inputFilled="handleInputFilled('gender', $event)" />
+          <Selector v-model="formData.age" label="Возраст" :options="ages" @inputFilled="handleInputFilled('age', $event)" />
+          <Input v-model="formData.mail" label="E-mail" type="email" @inputFilled="handleInputFilled('mail', $event)" />
         </div>
+
         <div class="test-view__step-container" v-if="currentStep === 2">
           <Selector v-model="formData.question1" label="Что такое алгоритм?" :options="questions1" @inputFilled="handleInputFilled('question1', $event)" />
         </div>
+
         <div class="test-view__step-container" v-if="currentStep === 3">
           <Input v-model="formData.question2" label="Опишите принципы ООП" textarea @inputFilled="handleInputFilled('question2', $event)" />
         </div>
+
         <div class="test-view__step-container" v-if="currentStep === 4">
           <RadioGroup v-model="formData.question3" label="Какой оператор используется для цикла?" :options="questions3" @inputFilled="handleInputFilled('question3', $event)" />
         </div>
+
         <div class="test-view__navigation">
           <button v-if="currentStep > 1" @click="prevStep" class="test-view__button test-view__button--back">Назад</button>
           <button
@@ -36,7 +42,6 @@
       </div>
     </transition>
 
-    <!-- Плавное появление сообщения об отправке -->
     <transition name="fade-in">
       <div v-if="showSubmittedMessage" class="test-view__submitted-message">
         Ответы отправлены.
@@ -49,6 +54,7 @@
 import Input from '../components/ui/Input.vue';
 import Selector from '../components/ui/Selector.vue';
 import RadioGroup from '../components/ui/RadioGroup.vue';
+import { sendTestData } from '../services/emailService';  // Используем API для отправки email
 
 export default {
   components: {
@@ -62,28 +68,36 @@ export default {
       testSubmitted: false,
       showSubmittedMessage: false,
       formData: {
-        fullName: '',
-        group: '',
-        question1: '',
-        question2: '',
-        question3: '',
+        fullName: '',   // Фамилия Имя Отчество
+        group: '',      // Группа
+        gender: '',     // Пол
+        age: '',        // Возраст
+        mail: '',       // E-mail
+        question1: '',  // Ответ на вопрос 1
+        question2: '',  // Ответ на вопрос 2
+        question3: '',  // Ответ на вопрос 3
       },
       inputsFilled: {
         fullName: false,
         group: false,
+        gender: false,
+        age: false,
+        mail: false,
         question1: false,
         question2: false,
         question3: false,
       },
-      groups: ['101', '102', '103'],
-      questions1: ['Шаги, выполняемые последовательно', 'Условное выражение', 'Функция'],
-      questions3: ['for', 'if', 'switch', 'while'],
+      groups: ['101', '102', '103'],  // Пример групп
+      genders: ['Мужской', 'Женский'],  // Пол
+      ages: Array.from({ length: 60 }, (_, i) => i + 18),  // Возраст от 18 до 77
+      questions1: ['Шаги, выполняемые последовательно', 'Условное выражение', 'Функция'],  // Варианты ответа на первый вопрос
+      questions3: ['for', 'if', 'switch', 'while'],  // Варианты ответа на третий вопрос
     };
   },
   computed: {
     canProceed() {
       if (this.currentStep === 1) {
-        return this.inputsFilled.fullName && this.inputsFilled.group;
+        return this.inputsFilled.fullName && this.inputsFilled.group && this.inputsFilled.gender && this.inputsFilled.age && this.inputsFilled.mail;
       }
       if (this.currentStep === 2) {
         return this.inputsFilled.question1;
@@ -93,9 +107,8 @@ export default {
       }
       return this.inputsFilled.question3;
     },
-    // Проверка для активации кнопки "Отправить"
     canSubmit() {
-      return this.inputsFilled.fullName && this.inputsFilled.group && this.inputsFilled.question1 && this.inputsFilled.question2 && this.inputsFilled.question3;
+      return this.inputsFilled.fullName && this.inputsFilled.group && this.inputsFilled.gender && this.inputsFilled.age && this.inputsFilled.mail && this.inputsFilled.question1 && this.inputsFilled.question2 && this.inputsFilled.question3;
     },
   },
   methods: {
@@ -112,7 +125,6 @@ export default {
     },
     async submitTest() {
       this.testSubmitted = true;
-
       const testResult = { ...this.formData };
 
       // Выводим данные в консоль перед отправкой
@@ -120,7 +132,7 @@ export default {
 
       // Отправляем данные через API
       try {
-        await sendEmail(testResult);  // Используем сервис для отправки email
+        await sendTestData(testResult);  // Используем сервис для отправки email
         console.log('Email отправлен успешно');
       } catch (error) {
         console.error('Ошибка при отправке email:', error);
@@ -228,5 +240,4 @@ label{
   opacity: 1;
   transform: translateY(0);
 }
-
 </style>
