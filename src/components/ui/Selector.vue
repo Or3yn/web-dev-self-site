@@ -1,7 +1,7 @@
 <template>
   <div class="selector-wrapper">
     <label>{{ label }}</label>
-    <select v-model="localValue" @change="checkInput">  <!-- Используем v-model для передачи данных -->
+    <select v-model="localValue" @change="handleSelection($event.target.value)">
       <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
     </select>
   </div>
@@ -14,21 +14,23 @@ export default {
     options: Array,
     value: String,  // Значение для v-model, привязано к родительскому
   },
-  computed: {
-    localValue: {
-      get() {
-        return this.value;  // Получаем значение из родителя
-      },
-      set(val) {
-        this.$emit('input', val);  // Передаем новое значение в родителя через v-model
-      },
+  data() {
+    return {
+      localValue: this.value || null, // Дефолтное значение
+    };
+  },
+  watch: {
+    value(newVal) {
+      this.localValue = newVal;
     },
   },
   methods: {
-    checkInput() {
-      if (this.localValue !== '') {
-        this.$emit('inputFilled', true);  // Если данные введены, передаем флаг true
-        this.$emit('updateAnswer', this.localValue);  // Передаём данные в родителя
+    handleSelection(option) {
+      if (option) {
+        this.localValue = option;
+        this.$emit('input', option);  // Передаем выбранное значение в родителя
+        this.$emit('inputFilled', true);  // Сообщаем, что выбор сделан
+        this.$emit('updateAnswer', option);  // Передаём данные в родителя
       } else {
         this.$emit('inputFilled', false);  // Если данные пусты, передаем false
       }

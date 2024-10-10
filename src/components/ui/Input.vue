@@ -4,11 +4,11 @@
     <input
       v-if="!textarea"
       v-model="localValue"
-    :type="type"
-    :placeholder="placeholder"
-    @input="checkInput"
+      :type="type"
+      :placeholder="placeholder"
+      @input="handleInput($event.target.value)"
     />
-    <textarea v-else v-model="localValue" :placeholder="placeholder" @input="checkInput"></textarea>
+    <textarea v-else v-model="localValue" :placeholder="placeholder" @input="handleInput($event.target.value)"></textarea>
   </div>
 </template>
 
@@ -27,23 +27,26 @@ export default {
     },
     placeholder: String,
   },
-  computed: {
-    localValue: {
-      get() {
-        return this.value;  // Получаем текущее значение из родителя
-      },
-      set(val) {
-        this.$emit('input', val);  // Передаем новое значение в родителя через v-model
-      },
+  data() {
+    return {
+      localValue: this.value || '', // Дефолтное значение
+    };
+  },
+  watch: {
+    value(newVal) {
+      this.localValue = newVal;
     },
   },
   methods: {
-    checkInput() {
-      if (this.localValue !== '') {
-        this.$emit('inputFilled', true);  // Если данные введены, передаём флаг
-        this.$emit('updateAnswer', this.localValue);  // Передаём данные в родителя
+    handleInput(val) {
+      console.log('Значение в поле ввода:', val); // Выводим в консоль текущее значение
+      if (val !== '') {
+        this.localValue = val;
+        this.$emit('input', val);  // Передаем новое значение в родителя
+        this.$emit('inputFilled', true);  // Сообщаем, что поле заполнено
+        this.$emit('updateAnswer', val);  // Передаём данные в родителя
       } else {
-        this.$emit('inputFilled', false); // Если данные пусты, передаём false
+        this.$emit('inputFilled', false); // Если поле пустое, сообщаем что оно не заполнено
       }
     },
   },
@@ -56,12 +59,12 @@ export default {
 }
 
 input, textarea {
-  width: 100%; /* Ширина на 100% от родительского контейнера */
+  width: 100%;
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #ccc;
   background-color: #1b1f26;
   color: white;
-  box-sizing: border-box; /* Учитываем padding и границы */
+  box-sizing: border-box;
 }
 </style>
