@@ -38,38 +38,47 @@ export default {
   },
   methods: {
     logPageView() {
-      const page = this.$route.path;
+      const page = this.$route.name;
 
-      // Загружаем данные истории сеанса из localStorage
+      if (!page) {
+        console.warn("Undefined route name detected. Skipping page view logging.");
+        return;
+      }
+
       let sessionHistory;
       try {
         sessionHistory = JSON.parse(localStorage.getItem('sessionHistory')) || {};
-        if (typeof sessionHistory !== 'object' || sessionHistory === null) {
-          sessionHistory = {}; // Инициализируем как пустой объект, если данные не объект
-        }
       } catch (e) {
-        sessionHistory = {}; // Если ошибка, инициализируем как пустой объект
+        sessionHistory = {};
+        console.error("Error parsing session history from localStorage:", e);
       }
 
-      // Загружаем данные общей истории из cookies
       let allTimeHistory;
       try {
         allTimeHistory = JSON.parse(getCookie('allTimeHistory') || '{}');
-        if (typeof allTimeHistory !== 'object' || allTimeHistory === null) {
-          allTimeHistory = {}; // Инициализируем как пустой объект, если данные не объект
-        }
       } catch (e) {
-        allTimeHistory = {}; // Если ошибка, инициализируем как пустой объект
+        allTimeHistory = {};
+        console.error("Error parsing all-time history from cookies:", e);
       }
 
-      // Увеличиваем счетчики для текущей страницы
+      // Увеличиваем счётчики для текущего сеанса и за всё время
       sessionHistory[page] = (sessionHistory[page] || 0) + 1;
       allTimeHistory[page] = (allTimeHistory[page] || 0) + 1;
 
-      // Сохраняем обновленные данные
+      // Сохраняем обновлённые данные
       localStorage.setItem('sessionHistory', JSON.stringify(sessionHistory));
-      setCookie('allTimeHistory', JSON.stringify(allTimeHistory), 365); // Преобразуем объект в строку перед установкой куки, срок - 1 год
+      setCookie('allTimeHistory', allTimeHistory, 365); // Сохраняем как JSON в cookies
+
+      console.log("Updated session history:", sessionHistory);
+      console.log("Updated all-time history:", allTimeHistory);
     }
+
+
+
+
+
+
+
   }
 }
 </script>

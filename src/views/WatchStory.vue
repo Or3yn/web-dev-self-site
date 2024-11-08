@@ -52,6 +52,7 @@
   </div>
 </template>
 
+
 <script>
 import { setCookie, getCookie } from '@/utils/cookieUtils';
 
@@ -79,19 +80,36 @@ export default {
   },
   methods: {
     loadSessionHistory() {
-      const sessionData = JSON.parse(localStorage.getItem('sessionHistory') || '{}'); // Добавлено значение по умолчанию '{}'
+      const sessionData = JSON.parse(localStorage.getItem('sessionHistory') || '{}');
+      console.log("Session history data:", sessionData);
+
       this.sessionHistory = Object.keys(sessionData).map(page => ({
         page,
-        count: sessionData[page]
+        count: Number.isInteger(sessionData[page]) ? sessionData[page] : 0
       }));
     },
     loadAllTimeHistory() {
-      const allTimeData = JSON.parse(getCookie('allTimeHistory') || '{}'); // Добавлено значение по умолчанию '{}'
-      this.allTimeHistory = Object.keys(allTimeData).map(page => ({
+      let allTimeData = getCookie('allTimeHistory') || '{}';
+      console.log("Raw all-time history data from cookies:", allTimeData);
+
+      let parsedData;
+      try {
+        parsedData = JSON.parse(allTimeData);
+      } catch (e) {
+        console.error("Error parsing all-time data from cookies:", e);
+        parsedData = {}; // Если парсинг не удался, задаем пустой объект
+      }
+
+      // Преобразуем данные в формат для отображения
+      this.allTimeHistory = Object.keys(parsedData).map(page => ({
         page,
-        count: allTimeData[page]
+        count: Number.isInteger(parsedData[page]) ? parsedData[page] : 0
       }));
     }
+
+
+
+
   }
 };
 </script>
