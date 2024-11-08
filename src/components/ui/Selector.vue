@@ -1,14 +1,16 @@
 <template>
-  <div class="selector-wrapper">
-    <label>{{ label }}</label>
-    <select
-      v-model="localValue"
-      @focus="handleFocus"
-      @change="handleSelection($event.target.value)"
-    >
-      <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
-    </select>
-  </div>
+  <form @submit.prevent="handleSubmit">
+    <div class="selector-wrapper">
+      <label>{{ label }}</label>
+      <select
+        v-model="localValue"
+        @focus="handleFocus"
+        @change="handleSelection($event.target.value)"
+      >
+        <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
+      </select>
+    </div>
+  </form>
 </template>
 
 <script>
@@ -47,6 +49,10 @@ export default {
       if (this.showCalendarOnFocus) {
         this.$emit("showCalendar"); // Trigger only if showCalendarOnFocus is true
       }
+    },
+    handleSubmit() {
+      // Здесь можно выполнить действие при отправке формы
+      this.$emit('formSubmitted', this.localValue);
     },
   },
 };

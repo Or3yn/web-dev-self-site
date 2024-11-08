@@ -119,6 +119,14 @@ export default {
       questions3: ['for', 'if', 'switch', 'while'],
     }
   },
+  mounted() {
+    // Добавляем глобальный слушатель для Enter
+    window.addEventListener('keydown', this.handleEnterKey);
+  },
+  beforeDestroy() {
+    // Убираем слушатель при удалении компонента
+    window.removeEventListener('keydown', this.handleEnterKey);
+  },
   computed: {
     canProceed() {
       if (this.currentStep === 1) {
@@ -144,7 +152,16 @@ export default {
       this.formData.birthdate = date; // Обновляем значение в formData
       this.showCalendar = false; // Закрываем календарь
     },
-
+    handleEnterKey(event) {
+      // Проверка нажатия Enter и отсутствие фокуса
+      if (event.key === 'Enter' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        if (this.currentStep < 4 && this.canProceed) {
+          this.nextStep();
+        } else if (this.currentStep === 4 && this.canSubmit) {
+          this.submitTest();
+        }
+      }
+    },
 
     updateAnswer(step, value) {
       this.testResult[step] = value
