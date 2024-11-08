@@ -35,6 +35,7 @@ export default {
     return {
       authorImage,
       authorFio: 'Богданова София Дмитриевна',
+      authorGroup: 'ПИ/б-22-1-о',
     }
   }
 }

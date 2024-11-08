@@ -1,7 +1,11 @@
 <template>
   <div class="selector-wrapper">
     <label>{{ label }}</label>
-    <select v-model="localValue" @change="handleSelection($event.target.value)">
+    <select
+      v-model="localValue"
+      @focus="handleFocus"
+      @change="handleSelection($event.target.value)"
+    >
       <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
     </select>
   </div>
@@ -12,11 +16,15 @@ export default {
   props: {
     label: String,
     options: Array,
-    value: String,  // Значение для v-model, привязано к родительскому
+    value: String,
+    showCalendarOnFocus: {
+      type: Boolean,
+      default: false, // Only trigger calendar if this is explicitly true
+    },
   },
   data() {
     return {
-      localValue: this.value || null, // Дефолтное значение
+      localValue: this.value || null,
     };
   },
   watch: {
@@ -28,11 +36,16 @@ export default {
     handleSelection(option) {
       if (option) {
         this.localValue = option;
-        this.$emit('input', option);  // Передаем выбранное значение в родителя
-        this.$emit('inputFilled', true);  // Сообщаем, что выбор сделан
-        this.$emit('updateAnswer', option);  // Передаём данные в родителя
+        this.$emit("input", option); // Update v-model binding
+        this.$emit("inputFilled", true);
+        this.$emit("updateAnswer", option);
       } else {
-        this.$emit('inputFilled', false);  // Если данные пусты, передаем false
+        this.$emit("inputFilled", false);
+      }
+    },
+    handleFocus() {
+      if (this.showCalendarOnFocus) {
+        this.$emit("showCalendar"); // Trigger only if showCalendarOnFocus is true
       }
     },
   },

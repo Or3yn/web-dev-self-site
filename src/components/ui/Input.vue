@@ -3,12 +3,21 @@
     <label>{{ label }}</label>
     <input
       v-if="!textarea"
+      ref="input"
       v-model="localValue"
       :type="type"
       :placeholder="placeholder"
       @input="handleInput($event.target.value)"
+      @focus="handleFocus"
     />
-    <textarea v-else v-model="localValue" :placeholder="placeholder" @input="handleInput($event.target.value)"></textarea>
+    <textarea
+      v-else
+      v-model="localValue"
+      :placeholder="placeholder"
+      @input="handleInput($event.target.value)">
+      @focus="handleFocus"
+      ref="input"
+    </textarea>
   </div>
 </template>
 
@@ -16,7 +25,10 @@
 export default {
   props: {
     label: String,
-    value: String,  // Значение для v-model, привязано к родительскому
+    value: {
+      type: String,
+      default: '' // Задает значение по умолчанию для props
+    },
     type: {
       type: String,
       default: 'text',
@@ -26,28 +38,57 @@ export default {
       default: false,
     },
     placeholder: String,
+    validationType: String,
+
   },
   data() {
     return {
-      localValue: this.value || '', // Дефолтное значение
+      localValue: this.value || '',
     };
   },
   watch: {
     value(newVal) {
       this.localValue = newVal;
-    },
+    }
   },
   methods: {
     handleInput(val) {
-      console.log('Значение в поле ввода:', val); // Выводим в консоль текущее значение
       if (val !== '') {
         this.localValue = val;
-        this.$emit('input', val);  // Передаем новое значение в родителя
-        this.$emit('inputFilled', true);  // Сообщаем, что поле заполнено
-        this.$emit('updateAnswer', val);  // Передаём данные в родителя
+        this.$emit('input', val);
+        this.$emit('inputFilled', true);
+        this.$emit('updateAnswer', val);
       } else {
-        this.$emit('inputFilled', false); // Если поле пустое, сообщаем что оно не заполнено
+        this.$emit('inputFilled', false);
       }
+    },
+    handleFocus() {
+      this.$emit('showCalendar'); // Emit a custom event for parent component
+    },
+    validate() {
+      if (this.validationType === 'fullName') {
+        const isValidFullName = this.validateFullName(this.localValue);
+        if (!isValidFullName) {
+          this.$emit('inputFilled', false);
+        }
+      } else if (this.validationType === 'phone') {
+        const isValidPhone = this.validatePhone(this.localValue);
+        if (!isValidPhone) {
+          this.$emit('inputFilled', false);
+        }
+      }
+    },
+    validateFullName(value) {
+      const words = value.trim().split(/\s+/);
+      const isValid = words.length === 3;
+      return isValid;
+    },
+    validatePhone(value) {
+      const isValid = /^(\+7|\+3)\d{8,10}$/.test(value);
+      return isValid;
+    },
+    focus() {
+      this.$refs.input.focus();
     },
   },
 };

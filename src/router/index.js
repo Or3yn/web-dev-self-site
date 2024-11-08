@@ -31,11 +31,21 @@ const routes = [
         name: 'University',
         component: () => import('../views/UniversityView.vue')
     },
+    {
+        path: '/watch-story',
+        name: 'WatchStory',
+        component: () => import('../views/WatchStory.vue')
+    }
+
 ]
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+        // Всегда прокручиваем наверх при переходе на другой маршрут
+        return { top: 0 }
+    }
 })
 
 export default router
