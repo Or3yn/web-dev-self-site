@@ -28,7 +28,7 @@ import Table from '../components/ui/Table.vue'
 export default {
   components: {
     CardData,
-    Table
+    Table,
   },
   data () {
     return {

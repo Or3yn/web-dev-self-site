@@ -1,5 +1,11 @@
 <template>
   <div class="test-view">
+    <Modal
+      v-if="isVisibleModal"
+      :isVisible="isVisibleModal"
+      @confirm="confirmSubmit"
+      @cancel="cancelSubmit"
+    />
     <h1 class="test-view__title">Основы программирования и алгоритмические языки</h1>
     <transition name="fade-out" @after-leave="showSubmittedMessage = true">
       <div v-if="!testSubmitted" class="test-view__form-container">
@@ -54,7 +60,7 @@
             v-if="currentStep === 4"
             :disabled="!canSubmit"
             :class="['test-view__button', canSubmit ? 'test-view__button--active' : 'test-view__button--disabled']"
-            @click="submitTest"
+            @click="openConfirmationModal"
           >Отправить</button>
         </div>
       </div>
@@ -73,16 +79,20 @@ import Selector from '../components/ui/Selector.vue'
 import RadioGroup from '../components/ui/RadioGroup.vue'
 import Calendar from '../components/Calendar.vue'
 import { sendTestData } from '../services/emailService'
+import Modal from "../components/ui/Modal.vue";
 export default {
   components: {
     Input,
     Selector,
     RadioGroup,
     Calendar,
+    Modal
   },
   data() {
     return {
       currentStep: 1,
+      confirmSubmission: false,
+      isVisibleModal: false,
       submissionFailed: false,
       showCalendar: false,
       testSubmitted: false,
@@ -195,39 +205,54 @@ export default {
       }
       this.currentStep++;
     },
-
+    openConfirmationModal() {
+      if (this.canSubmit) {
+        this.isVisibleModal = true; // Open modal for confirmation
+      }
+    },
+    cancelSubmit() {
+      this.isVisibleModal = false; // Close the modal without submitting
+    },
+    confirmSubmit() {
+      this.isVisibleModal = false; // Close the modal
+      this.confirmSubmission = true; // Set confirmation flag to true
+      this.submitTest(); // Proceed with submission
+    },
     prevStep() {
       this.currentStep--
     },
       // Остальные методы остаются прежними
     async submitTest() {
-      this.testSubmitted = true;
-      this.submissionFailed = false; // Reset error flag on each submit attempt
+      if (this.confirmSubmission === true ) {
+        this.testSubmitted = true;
+        this.submissionFailed = false; // Reset error flag on each submit attempt
 
-      const testData = {
-        fullName: this.testResult[0] || '',
-        group: this.testResult[1] || '',
-        gender: this.testResult[2] || '',
-        age: parseInt(this.testResult[3]) || '',
-        mail: this.testResult[4] || '',
-        question1: this.testResult[5] || '',
-        question2: this.testResult[6] || '',
-        question3: this.testResult[7] || '',
-        phone: this.testResult[8] || '',
-        birthdate: this.testResult[9] || ''
-      };
+        const testData = {
+          fullName: this.testResult[0] || '',
+          group: this.testResult[1] || '',
+          gender: this.testResult[2] || '',
+          age: parseInt(this.testResult[3]) || '',
+          mail: this.testResult[4] || '',
+          question1: this.testResult[5] || '',
+          question2: this.testResult[6] || '',
+          question3: this.testResult[7] || '',
+          phone: this.testResult[8] || '',
+          birthdate: this.testResult[9] || ''
+        };
 
-      try {
-        const response = await sendTestData(testData);
-        console.log('Ответ сервера:', response);
-        this.showSubmittedMessage = true;
-      } catch (error) {
-        console.error('Ошибка при отправке данных:', error);
-        this.submissionFailed = true; // Set error flag to true on failure
-        this.showSubmittedMessage = true; // Display message indicating failure
+        try {
+          const response = await sendTestData(testData);
+          console.log('Ответ сервера:', response);
+          this.showSubmittedMessage = true;
+        } catch (error) {
+          console.error('Ошибка при отправке данных:', error);
+          this.submissionFailed = true; // Set error flag to true on failure
+          this.showSubmittedMessage = true; // Display message indicating failure
+        }
       }
     }
   }
+
 }
 </script>
 

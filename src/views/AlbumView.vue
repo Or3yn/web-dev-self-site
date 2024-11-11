@@ -30,13 +30,13 @@
           alt="Close"
         />
         <img
-          src="../assets/icons/arrow.png"
+          src="../assets/icons/right-arrow.png"
           class="lightbox__arrow lightbox__arrow--right"
           @click="nextPhoto"
           alt="Next"
         />
         <img
-          src="../assets/icons/popcorn.png"
+          src="../assets/icons/left-arrow.png"
           class="lightbox__arrow lightbox__arrow--left"
           @click="prevPhoto"
           alt="Previous"
