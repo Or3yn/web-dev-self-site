@@ -19,7 +19,11 @@
           <Selector v-model="formData.group" label="Группа" :options="groups" @inputFilled="handleInputFilled('group', $event)" @updateAnswer="updateAnswer(1, $event)" />
           <RadioGroup v-model="formData.gender" label="Пол" :options="genders" @inputFilled="handleInputFilled('gender', $event)" @updateAnswer="updateAnswer(2, $event)" />
           <Selector v-model="formData.age" label="Возраст" :options="ages" @inputFilled="handleInputFilled('age', $event)" @updateAnswer="updateAnswer(3, $event)" />
-          <Input v-model="formData.mail" label="E-mail" type="email" @inputFilled="handleInputFilled('mail', $event)" @updateAnswer="updateAnswer(4, $event)" />
+          <Input v-model="formData.mail" label="E-mail"
+                 type="email"
+                 @inputFilled="handleInputFilled('mail', $event)"
+                 validationType="email"
+                 @updateAnswer="updateAnswer(4, $event)" />
           <Input
             ref="phone"
             v-model="formData.phone"

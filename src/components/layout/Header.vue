@@ -13,21 +13,19 @@
       </router-link>
       <div class="header-box__item interests-dropdown" @mouseenter="showDropdown" @mouseleave="hideDropdown">
         <router-link
+          class="interests-dropdown__link"
           :class="{ 'active-tab': isActiveRoute('/interests') }"
           to="/interests"
         >
           Мои интересы
         </router-link>
         <ul v-if="isDropdownVisible" class="dropdown-menu">
-          <li
-            v-for="(item, index) in interests"
-            :key="index"
-          >
-            <!-- Изменяем router-link на кнопку с обработчиком клика -->
+          <li v-for="(item, index) in interests" :key="index">
             <button @click="scrollToInterest(item.target)">{{ item.header }}</button>
           </li>
         </ul>
       </div>
+
       <router-link
         class="header-box__item"
         :class="{ 'active-tab': isActiveRoute('/university') }"
@@ -82,7 +80,6 @@ export default {
       this.isScrolled = window.scrollY > 0;
     },
     isActiveRoute(route) {
-      // Проверяем, чтобы /interests всегда считался активным, даже если путь содержит якорь
       return this.$route.path.startsWith(route);
     },
     showDropdown() {
@@ -159,15 +156,7 @@ export default {
   background-color: ghostwhite;
   transition: width 0.3s ease;
 }
-.header-box__item.active-tab::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%; /* Постоянное подчеркивание */
-  height: 1px;
-  background-color: ghostwhite;
-}
+
 .header-box a {
   text-decoration: none;
   color: ghostwhite;
@@ -186,7 +175,7 @@ export default {
 
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: 110%;
   min-width: 200px;
   left: 0;
   background-color: rgba(40, 44, 52, 0.95); /* Небольшая темная прозрачность */
@@ -227,6 +216,16 @@ export default {
 .dropdown-menu button:hover {
   background-color: rgba(70, 130, 180, 0.3); /* Легкая подсветка при наведении */
   border-radius: 4px;
+}
+.interests-dropdown__link.active-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: ghostwhite;
+  transition: width 0.3s ease;
 }
 
 </style>
