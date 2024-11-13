@@ -43,9 +43,16 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
     scrollBehavior(to, from, savedPosition) {
-        // Всегда прокручиваем наверх при переходе на другой маршрут
-        return { top: 0 }
-    }
+        if (to.hash) {
+            // Если есть якорь, прокручиваем к нему
+            return {
+                el: to.hash,
+                behavior: 'smooth', // Плавная прокрутка
+            };
+        }
+        // Если нет якоря, прокручиваем наверх
+        return { top: 0 };
+    },
 })
 
 export default router

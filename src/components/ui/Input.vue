@@ -116,9 +116,12 @@ export default {
         this.isValid = this.validatePhone(this.localValue);
         this.errorMessage = this.isValid ? '' : 'Телефон должен начинаться с +7 или +3 и содержать от 9 до 11 цифр.';
       } else if (this.validationType === 'email') {
-        console.log(`valid fio worked if`)
         this.isValid = this.validateEmail(this.localValue);
         this.errorMessage = this.isValid ? '' : 'Введите корректную почту';
+      }
+      else if (this.validationType === 'number') {
+        this.isValid = this.validateNumber(this.localValue);
+        this.errorMessage = this.isValid ? '' : 'Введите число';
       }
       this.formValid = this.isValid; // Обновление общего статуса валидации формы
       this.$emit('inputFilled', this.isValid);
@@ -133,6 +136,9 @@ export default {
     },
     validateEmail(value) {
       return value.includes('@') && value.includes('.') && value.length >= 4;
+    },
+    validateNumber(value) {
+      return !isNaN(value);
     },
     validatePhone(value) {
       return /^(\+7|\+3)\d{8,10}$/.test(value);

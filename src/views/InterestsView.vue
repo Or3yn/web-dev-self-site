@@ -1,12 +1,11 @@
 <template>
   <div class="interests-view">
-    <h1 class="interests-view__header" @click="toggleCardLinks">Мои Интересы</h1>
+    <h1 class="interests-view__header" >Мои Интересы</h1>
     <transition name="fade">
-      <CardLinks v-if="showCardLinks"></CardLinks>
+      <CardLinks></CardLinks>
     </transition>
     <transition name="fade">
-      <!-- Добавляем v-if для показа списка карточек только после клика -->
-      <div v-if="showCardLinks" class="interests-view__list">
+      <div  class="interests-view__list">
         <CardData
           v-for="(item, index) in interests"
           :key="index"
@@ -36,14 +35,8 @@ export default {
   data() {
     return {
       interests,
-      showCardLinks: false
     }
   },
-  methods: {
-    toggleCardLinks() {
-      this.showCardLinks = !this.showCardLinks
-    }
-  }
 }
 </script>
 

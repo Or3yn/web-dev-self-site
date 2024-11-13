@@ -43,7 +43,12 @@
           <Selector v-model="formData.question1" label="Что такое алгоритм?" :options="questions1" @inputFilled="handleInputFilled('question1', $event)" @updateAnswer="updateAnswer(5, $event)" />
         </div>
         <div class="test-view__step-container" v-show="currentStep === 3">
-          <Input v-model="formData.question2" label="Опишите принципы ООП" textarea @inputFilled="handleInputFilled('question2', $event)" @updateAnswer="updateAnswer(6, $event)" />
+          <Input v-model="formData.question2"
+                 label="Сколько основных принципов ООП?"
+                 textarea @inputFilled="handleInputFilled('question2', $event)"
+                 @updateAnswer="updateAnswer(6, $event)"
+                 validationType="number"
+          />
         </div>
         <div class="test-view__step-container" v-show="currentStep === 4">
           <RadioGroup v-model="formData.question3" label="Какой оператор используется для цикла?" :options="questions3" @inputFilled="handleInputFilled('question3', $event)" @updateAnswer="updateAnswer(7, $event)" />
@@ -151,7 +156,11 @@ export default {
       return this.inputsFilled.question3
     },
     canSubmit() {
-      return this.inputsFilled.fullName && this.inputsFilled.group && this.inputsFilled.gender && this.inputsFilled.age && this.inputsFilled.mail && this.inputsFilled.phone && this.inputsFilled.question1 && this.inputsFilled.question2 && this.inputsFilled.question3
+      return this.inputsFilled.fullName && this.inputsFilled.group
+        && this.inputsFilled.gender && this.inputsFilled.age &&
+        this.inputsFilled.mail && this.inputsFilled.phone
+        && this.inputsFilled.question1 && this.inputsFilled.question2
+        && this.inputsFilled.question3
     },
   },
   methods: {
@@ -199,6 +208,16 @@ export default {
           this.$root.$refs.errorNotification.show();
           if (this.$refs.phone) {
             this.$refs.phone.focus();
+          }
+          return;
+        }
+      }
+      if (this.currentStep === 3) {
+        if (!this.inputsFilled.question2) {
+          this.$root.errorMessage = "Введите число вместо текста";
+          this.$root.$refs.errorNotification.show();
+          if (this.$refs.question2) {
+            this.$refs.question2.focus();
           }
           return;
         }

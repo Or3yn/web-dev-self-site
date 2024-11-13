@@ -17,11 +17,9 @@
         </div>
       </div>
     </div>
-
-    <!-- Lightbox Overlay -->
     <div v-if="lightboxActive" class="lightbox">
       <div class="lightbox__content">
-        <img :src="photos[currentIndex].imageSrc" class="lightbox__image" />
+        <img :src="photos[currentIndex].imageSrc" class="lightbox__image"  alt=""/>
         <p class="lightbox__caption">{{ photos[currentIndex].title }}</p>
         <img
           src="../assets/icons/clear.png"
@@ -36,7 +34,7 @@
           alt="Next"
         />
         <img
-          src="../assets/icons/left-arrow.png"
+          src="../assets/icons/right-arrow.png"
           class="lightbox__arrow lightbox__arrow--left"
           @click="prevPhoto"
           alt="Previous"
@@ -204,16 +202,23 @@ export default {
 .lightbox__arrow {
   position: absolute;
   top: 50%;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   cursor: pointer;
+  background-color: white; /* Белый фон под стрелкой */
+  border-radius: 50%; /* Создаем круг */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-50%); /* Центрируем по вертикали */
 }
 
 .lightbox__arrow--right {
-  right: 20px;
+  right: -150px;
 }
 
 .lightbox__arrow--left {
-  left: 20px;
+  transform: scaleX(-1);
+  left: -150px;
 }
 </style>

@@ -1,10 +1,14 @@
 import cat from '../assets/images/cat.jpg';
+import sunset from '../assets/images/sunset.jpg';
+import dnepr from '../assets/images/dnepr.jpg';
+import andrij from '../assets/images/andrij.jpg';
+import gate from '../assets/images/gate.jpg';
 
 export const albumPhotos = [
-    { imageSrc: cat, title: 'Киевский закат' },
-    { imageSrc: cat, title: 'Днепр в лучах солнца' },
-    { imageSrc: cat, title: 'Андреевский спуск' },
-    { imageSrc: cat, title: 'Золотые ворота' },
+    { imageSrc: sunset, title: 'Киевский закат' },
+    { imageSrc: dnepr, title: 'Днепр в лучах солнца' },
+    { imageSrc: andrij, title: 'Андреевский спуск' },
+    { imageSrc: gate, title: 'Золотые ворота' },
     { imageSrc: cat, title: 'Софийский собор' },
     { imageSrc: cat, title: 'Парк Феофания' },
     { imageSrc: cat, title: 'Киево-Печерская лавра' },

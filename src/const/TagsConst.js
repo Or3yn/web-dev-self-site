@@ -5,5 +5,5 @@ export const tags = [
     'Php',
     'Git',
     'TypeScript',
-    'Docker'
+    'Node.js',
 ];
