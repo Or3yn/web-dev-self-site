@@ -14,7 +14,6 @@ export default {
   },
   computed: {
     formattedDateTime() {
-      // Форматируем дату и время: ЧЧ.ММ.ГГ День недели
       const date = this.currentDate;
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -23,7 +22,6 @@ export default {
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const year = date.getFullYear().toString().slice(-2);
 
-      // Получаем день недели и делаем первую букву заглавной
       let weekday = date.toLocaleDateString('ru-RU', { weekday: 'long' });
       weekday = weekday.charAt(0).toUpperCase() + weekday.slice(1);
 

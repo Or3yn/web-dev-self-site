@@ -10,20 +10,50 @@
     <transition name="fade-out" @after-leave="showSubmittedMessage = true">
       <div v-if="!testSubmitted" class="test-view__form-container">
         <div class="test-view__step-container" v-show="currentStep === 1">
-          <Input ref="fullName" v-model="formData.fullName"
-                 label="Фамилия Имя Отчество"
-                 @inputFilled="handleInputFilled('fullName', $event)"
-                 @updateAnswer="updateAnswer(0, $event)"
-                 validationType="fullName"
+          <Input
+            ref="fullName" v-model="formData.fullName"
+            label="Фамилия Имя Отчество"
+            @inputFilled="handleInputFilled('fullName', $event)"
+            @updateAnswer="updateAnswer(0, $event)"
+            validationType="fullName"
+            @keydown.enter="focusNextField('group')"
           />
-          <Selector v-model="formData.group" label="Группа" :options="groups" @inputFilled="handleInputFilled('group', $event)" @updateAnswer="updateAnswer(1, $event)" />
-          <RadioGroup v-model="formData.gender" label="Пол" :options="genders" @inputFilled="handleInputFilled('gender', $event)" @updateAnswer="updateAnswer(2, $event)" />
-          <Selector v-model="formData.age" label="Возраст" :options="ages" @inputFilled="handleInputFilled('age', $event)" @updateAnswer="updateAnswer(3, $event)" />
-          <Input v-model="formData.mail" label="E-mail"
-                 type="email"
-                 @inputFilled="handleInputFilled('mail', $event)"
-                 validationType="email"
-                 @updateAnswer="updateAnswer(4, $event)" />
+          <Selector
+            ref="group"
+            v-model="formData.group"
+            label="Группа"
+            :options="groups"
+            @inputFilled="handleInputFilled('group', $event)"
+            @updateAnswer="updateAnswer(1, $event)"
+            @keydown.enter="focusNextField('gender')"
+          />
+          <RadioGroup
+            ref="gender"
+            v-model="formData.gender"
+            label="Пол"
+            :options="genders"
+            @inputFilled="handleInputFilled('gender', $event)"
+            @updateAnswer="updateAnswer(2, $event)"
+            @keydown.enter="focusNextField('age')"
+          />
+          <Selector
+            ref="age"
+            v-model="formData.age"
+            label="Возраст"
+            :options="ages"
+            @inputFilled="handleInputFilled('age', $event)"
+            @updateAnswer="updateAnswer(3, $event)"
+            @keydown.enter="focusNextField('mail')"
+          />
+          <Input
+            ref="mail"
+            v-model="formData.mail" label="E-mail"
+            type="email"
+            @inputFilled="handleInputFilled('mail', $event)"
+            validationType="email"
+            @updateAnswer="updateAnswer(4, $event)"
+            @keydown.enter="focusNextField('phone')"
+          />
           <Input
             ref="phone"
             v-model="formData.phone"
@@ -31,6 +61,7 @@
             @inputFilled="handleInputFilled('phone', $event)"
             @updateAnswer="updateAnswer(5, $event)"
             validationType="phone"
+            @keydown.enter="focusNextField('birthdate')"
           />
           <Input
             ref="birthdate"
@@ -76,7 +107,7 @@
     </transition>
     <transition name="fade-in">
       <div v-if="showSubmittedMessage" class="test-view__submitted-message">
-        {{ submissionFailed ? "Ответы не отправлены, указана несуществующая почта" : "Ответы отправлены" }}
+        {{ submissionFailed ? "Ответы не отправлены" : "Ответы отправлены" }}
       </div>
     </transition>
   </div>
@@ -89,13 +120,15 @@ import RadioGroup from '../components/ui/RadioGroup.vue'
 import Calendar from '../components/Calendar.vue'
 import { sendTestData } from '../services/emailService'
 import Modal from "../components/ui/Modal.vue";
+import ErrorNotification from '../components/ErrorNotification.vue';
 export default {
   components: {
     Input,
     Selector,
     RadioGroup,
     Calendar,
-    Modal
+    Modal,
+    ErrorNotification
   },
   data() {
     return {
@@ -139,11 +172,9 @@ export default {
     }
   },
   mounted() {
-    // Добавляем глобальный слушатель для Enter
     window.addEventListener('keydown', this.handleEnterKey);
   },
   beforeDestroy() {
-    // Убираем слушатель при удалении компонента
     window.removeEventListener('keydown', this.handleEnterKey);
   },
   computed: {
@@ -172,20 +203,26 @@ export default {
       this.inputsFilled[field] = isFilled
     },
     setBirthday(date) {
-      this.formData.birthdate = date; // Обновляем значение в formData
-      this.showCalendar = false; // Закрываем календарь
+      this.formData.birthdate = date;
+      this.showCalendar = false;
+    },
+    focusNextField(nextField) {
+      if (this.$refs[nextField]) {
+        this.$refs[nextField].focus();
+      }
     },
     handleEnterKey(event) {
-      // Проверка нажатия Enter и отсутствие фокуса
       if (event.key === 'Enter' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
         if (this.currentStep < 4 && this.canProceed) {
           this.nextStep();
         } else if (this.currentStep === 4 && this.canSubmit) {
-          this.submitTest();
+          this.openConfirmationModal();
+        } else {
+          this.$root.errorMessage = "Заполните все поля для перехода.";
+          this.$root.$refs.errorNotification.show();
         }
       }
     },
-
     updateAnswer(step, value) {
       this.testResult[step] = value
     },
@@ -230,26 +267,24 @@ export default {
     },
     openConfirmationModal() {
       if (this.canSubmit) {
-        this.isVisibleModal = true; // Open modal for confirmation
+        this.isVisibleModal = true;
       }
     },
     cancelSubmit() {
-      this.isVisibleModal = false; // Close the modal without submitting
+      this.isVisibleModal = false;
     },
     confirmSubmit() {
-      this.isVisibleModal = false; // Close the modal
-      this.confirmSubmission = true; // Set confirmation flag to true
-      this.submitTest(); // Proceed with submission
+      this.isVisibleModal = false;
+      this.confirmSubmission = true;
+      this.submitTest();
     },
     prevStep() {
       this.currentStep--
     },
-      // Остальные методы остаются прежними
     async submitTest() {
       if (this.confirmSubmission === true ) {
         this.testSubmitted = true;
-        this.submissionFailed = false; // Reset error flag on each submit attempt
-
+        this.submissionFailed = false;
         const testData = {
           fullName: this.testResult[0] || '',
           group: this.testResult[1] || '',
@@ -269,8 +304,8 @@ export default {
           this.showSubmittedMessage = true;
         } catch (error) {
           console.error('Ошибка при отправке данных:', error);
-          this.submissionFailed = true; // Set error flag to true on failure
-          this.showSubmittedMessage = true; // Display message indicating failure
+          this.submissionFailed = true;
+          this.showSubmittedMessage = true;
         }
       }
     }

@@ -214,7 +214,7 @@ export default {
 }
 
 .dropdown-menu button:hover {
-  background-color: rgba(70, 130, 180, 0.3); /* Легкая подсветка при наведении */
+  background-color: rgba(70, 130, 180, 0.3);
   border-radius: 4px;
 }
 .interests-dropdown__link.active-tab::after {
