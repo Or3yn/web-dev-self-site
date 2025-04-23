@@ -1,7 +1,15 @@
 <template>
   <div class="photo-description" :class="{'reverse-layout': imagePosition === 'right'}">
     <div class="photo-description__image">
-      <img :src="imageSrc" alt="Image Description">
+      <img
+        :src="imageSrc"
+        alt="Image Description"
+        @mouseenter="showPopover"
+        @mouseleave="hidePopover"
+      >
+      <div class="popover" ref="popover">
+        <p>Архангел Михаил</p>
+      </div>
     </div>
     <div class="photo-description__content">
       <h2>{{ year }}</h2>
@@ -11,7 +19,10 @@
   </div>
 </template>
 
+
 <script>
+import $ from 'jquery';
+
 export default {
   name: 'PhotoDescription',
   props: {
@@ -35,6 +46,19 @@ export default {
       type: String,
       default: 'left',
     }
+  },
+  mounted() {
+    $(this.$refs.popover).hide();
+  },
+  methods: {
+    showPopover() {
+      $(this.$refs.popover).stop(true, true).fadeIn(300);
+    },
+    hidePopover() {
+      setTimeout(() => {
+        $(this.$refs.popover).stop(true, true).fadeOut(300);
+      }, 1000);
+    }
   }
 }
 </script>
@@ -45,6 +69,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   margin: 60px 0;
+  position: relative;
 }
 
 .photo-description.reverse-layout {
@@ -56,8 +81,25 @@ export default {
   height: 300px;
   object-fit: cover;
   border-radius: 10px;
+  position: relative;
 }
 .photo-description__content{
   margin: 80px;
+}
+.popover {
+  position: absolute;
+  top: 50%;
+  left: 100%; /* Расположение справа от картинки */
+  transform: translateY(-50%) translateX(20px); /* Смещение немного вправо */
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  display: none;
+  text-align: center; /* Центрирование текста */
+  font-size: 16px;
+  width: 150px; /* Ширина popover */
 }
 </style>

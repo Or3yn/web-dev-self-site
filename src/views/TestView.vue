@@ -219,7 +219,6 @@ export default {
           this.openConfirmationModal();
         } else {
           this.$root.errorMessage = "Заполните все поля для перехода.";
-          this.$root.$refs.errorNotification.show();
         }
       }
     },

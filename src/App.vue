@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import $ from 'jquery';
 import Footer from './components/layout/Footer.vue';
 import Header from './components/layout/Header.vue';
 import CurrentDateTime from './components/layout/CurrentDateTime.vue';
