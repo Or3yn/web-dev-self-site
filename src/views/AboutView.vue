@@ -10,6 +10,7 @@
         :content="item.content"
         :imageSrc="item.imageSrc"
         :imagePosition="item.imagePosition"
+        :class="{ 'with-popover': index === 0 }"
       />
     </div>
   </div>

@@ -31,11 +31,28 @@ const routes = [
         name: 'University',
         component: () => import('../views/UniversityView.vue')
     },
+    {
+        path: '/watch-story',
+        name: 'WatchStory',
+        component: () => import('../views/WatchStory.vue')
+    }
+
 ]
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (to.hash) {
+            // Если есть якорь, прокручиваем к нему
+            return {
+                el: to.hash,
+                behavior: 'smooth', // Плавная прокрутка
+            };
+        }
+        // Если нет якоря, прокручиваем наверх
+        return { top: 0 };
+    },
 })
 
 export default router

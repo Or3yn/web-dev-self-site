@@ -1,10 +1,16 @@
 <template>
-  <div class="selector-wrapper">
-    <label>{{ label }}</label>
-    <select v-model="localValue" @change="checkInput">
-      <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
-    </select>
-  </div>
+  <form @submit.prevent="handleSubmit">
+    <div class="selector-wrapper">
+      <label>{{ label }}</label>
+      <select
+        v-model="localValue"
+        @focus="handleFocus"
+        @change="handleSelection($event.target.value)"
+      >
+        <option v-for="option in options" :key="option" :value="option">{{ option }}</option>
+      </select>
+    </div>
+  </form>
 </template>
 
 <script>
@@ -12,25 +18,41 @@ export default {
   props: {
     label: String,
     options: Array,
-    value: String,  // Привязка v-model
+    value: String,
+    showCalendarOnFocus: {
+      type: Boolean,
+      default: false, // Only trigger calendar if this is explicitly true
+    },
   },
-  computed: {
-    localValue: {
-      get() {
-        return this.value;  // Получаем текущее значение
-      },
-      set(val) {
-        this.$emit('input', val);  // Отправляем новое значение наверх
-      },
+  data() {
+    return {
+      localValue: this.value || null,
+    };
+  },
+  watch: {
+    value(newVal) {
+      this.localValue = newVal;
     },
   },
   methods: {
-    checkInput() {
-      if (this.localValue !== '') {
-        this.$emit('inputFilled', true);  // Если данные введены, передаём флаг
+    handleSelection(option) {
+      if (option) {
+        this.localValue = option;
+        this.$emit("input", option); // Update v-model binding
+        this.$emit("inputFilled", true);
+        this.$emit("updateAnswer", option);
       } else {
-        this.$emit('inputFilled', false); // Если данные пусты, передаём false
+        this.$emit("inputFilled", false);
       }
+    },
+    handleFocus() {
+      if (this.showCalendarOnFocus) {
+        this.$emit("showCalendar"); // Trigger only if showCalendarOnFocus is true
+      }
+    },
+    handleSubmit() {
+      // Здесь можно выполнить действие при отправке формы
+      this.$emit('formSubmitted', this.localValue);
     },
   },
 };
